@@ -68,7 +68,7 @@ pub enum Error {
     InvalidCertificate(CertificateError),
 
     /// The presented SCT(s) were invalid.
-    InvalidSct(sct::Error),
+    InvalidSct(crate::crypto::sct::Error),
 
     /// A catch-all error for unlikely errors.
     General(String),
@@ -436,8 +436,8 @@ mod tests {
 
     #[test]
     fn smoke() {
+        use crate::crypto::sct;
         use crate::enums::{AlertDescription, ContentType, HandshakeType};
-        use sct;
 
         let all = vec![
             Error::InappropriateMessage {

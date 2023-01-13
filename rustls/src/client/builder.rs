@@ -2,6 +2,7 @@ use crate::anchors;
 use crate::builder::{ConfigBuilder, WantsVerifier};
 use crate::client::handy;
 use crate::client::{ClientConfig, ResolvesClientCert};
+use crate::crypto::sct;
 use crate::error::Error;
 use crate::key;
 use crate::kx::SupportedKxGroup;

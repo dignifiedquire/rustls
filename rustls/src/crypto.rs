@@ -94,4 +94,38 @@ mod crypto_ring {
             RSA_PKCS1_SHA384, RSA_PKCS1_SHA512, RSA_PSS_SHA256, RSA_PSS_SHA384, RSA_PSS_SHA512,
         };
     }
+
+    /// Document me.
+    pub mod sct {
+        pub use sct::{Error, Log};
+
+        /// Verifies that the SCT `sct` (a `SignedCertificateTimestamp` encoding)
+        /// is a correctly signed timestamp for `cert` (a DER-encoded X.509 end-entity
+        /// certificate) valid `at_time`.  `logs` describe the CT logs trusted by
+        /// the caller to sign such an SCT.
+        ///
+        /// On success, this function returns the log used as an index into `logs`.
+        /// Otherwise, it returns an `Error`.
+        pub fn verify_sct(
+            cert: &[u8],
+            sct: &[u8],
+            at_time: u64,
+            logs: &[&Log<'_>],
+        ) -> Result<usize, Error> {
+            sct::verify_sct(cert, sct, at_time, logs)
+        }
+    }
+
+    /// Document me.
+    pub mod webpki {
+        pub use webpki::{
+            DnsName, DnsNameRef, EndEntityCert, Error, InvalidDnsNameError, IpAddr, IpAddrRef,
+            SignatureAlgorithm, SubjectNameRef, Time, TlsClientTrustAnchors, TlsServerTrustAnchors,
+            TrustAnchor, ECDSA_P256_SHA256, ECDSA_P256_SHA384, ECDSA_P384_SHA256,
+            ECDSA_P384_SHA384, ED25519, RSA_PKCS1_2048_8192_SHA256, RSA_PKCS1_2048_8192_SHA384,
+            RSA_PKCS1_2048_8192_SHA512, RSA_PKCS1_3072_8192_SHA384,
+            RSA_PSS_2048_8192_SHA256_LEGACY_KEY, RSA_PSS_2048_8192_SHA384_LEGACY_KEY,
+            RSA_PSS_2048_8192_SHA512_LEGACY_KEY,
+        };
+    }
 }

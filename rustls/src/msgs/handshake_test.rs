@@ -1,3 +1,4 @@
+use crate::crypto::webpki::DnsNameRef;
 use crate::enums::{CipherSuite, HandshakeType, ProtocolVersion, SignatureScheme};
 use crate::key::Certificate;
 use crate::msgs::base::{Payload, PayloadU16, PayloadU24, PayloadU8};
@@ -19,8 +20,6 @@ use crate::msgs::handshake::{
     SupportedPointFormats, UnknownExtension,
 };
 use crate::verify::DigitallySignedStruct;
-
-use webpki::DnsNameRef;
 
 #[test]
 fn rejects_short_random() {

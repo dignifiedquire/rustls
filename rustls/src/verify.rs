@@ -3,6 +3,8 @@ use std::fmt;
 use crate::anchors::{OwnedTrustAnchor, RootCertStore};
 use crate::client::ServerName;
 use crate::crypto::digest::Digest;
+use crate::crypto::sct;
+use crate::crypto::webpki;
 use crate::enums::SignatureScheme;
 use crate::error::{CertificateError, Error, InvalidMessage, PeerMisbehaved};
 use crate::key::Certificate;
@@ -641,7 +643,7 @@ impl ClientCertVerifier for AllowAnyAnonymousOrAuthenticatedClient {
 }
 
 fn pki_error(error: webpki::Error) -> Error {
-    use webpki::Error::*;
+    use crate::crypto::webpki::Error::*;
     match error {
         BadDer | BadDerTime => CertificateError::BadEncoding.into(),
         CertNotValidYet => CertificateError::NotValidYet.into(),
