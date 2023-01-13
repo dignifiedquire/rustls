@@ -1,13 +1,6 @@
 //! The single place where we generate random material for our own use.
 
-use crate::crypto::rand::{SecureRandom, SystemRandom};
-
-/// Fill the whole slice with random material.
-pub(crate) fn fill_random(bytes: &mut [u8]) -> Result<(), GetRandomFailed> {
-    SystemRandom::new()
-        .fill(bytes)
-        .map_err(|_| GetRandomFailed)
-}
+pub(crate) use crate::crypto::rand::{fill_random, GetRandomFailed};
 
 /// Make a Vec<u8> of the given size
 /// containing random material.
@@ -23,6 +16,3 @@ pub(crate) fn random_u32() -> Result<u32, GetRandomFailed> {
     fill_random(&mut buf)?;
     Ok(u32::from_be_bytes(buf))
 }
-
-#[derive(Debug)]
-pub struct GetRandomFailed;

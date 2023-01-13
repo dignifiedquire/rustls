@@ -350,6 +350,11 @@ mod versions;
 /// Internal classes which may be useful outside the library.
 /// The contents of this section DO NOT form part of the stable interface.
 pub mod internal {
+    /// Low level cryptographic primitives.
+    pub mod crypto {
+        pub use crate::crypto::*;
+    }
+
     /// Low-level TLS message parsing and encoding functions.
     pub mod msgs {
         pub use crate::msgs::*;

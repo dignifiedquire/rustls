@@ -3349,8 +3349,7 @@ mod test_quic {
         )
         .unwrap();
 
-        use crate::crypto;
-        use crate::crypto::rand::SecureRandom;
+        use rustls::internal::crypto;
         use rustls::internal::msgs::base::PayloadU16;
         use rustls::internal::msgs::enums::{Compression, NamedGroup};
         use rustls::internal::msgs::handshake::{
@@ -3360,7 +3359,7 @@ mod test_quic {
 
         let rng = crypto::rand::SystemRandom::new();
         let mut random = [0; 32];
-        rng.fill(&mut random).unwrap();
+        crypto::rand::fill_random(&mut random).unwrap();
         let random = Random::from(random);
 
         let kx = crypto::agreement::EphemeralPrivateKey::generate(&crypto::agreement::X25519, &rng)
@@ -3405,8 +3404,7 @@ mod test_quic {
         server_config.alpn_protocols = vec!["foo".into()];
         let server_config = Arc::new(server_config);
 
-        use crate::crypto;
-        use crate::crypto::rand::SecureRandom;
+        use rustls::internal::crypto;
         use rustls::internal::msgs::base::PayloadU16;
         use rustls::internal::msgs::enums::{Compression, NamedGroup};
         use rustls::internal::msgs::handshake::{
@@ -3414,11 +3412,11 @@ mod test_quic {
         };
         use rustls::{CipherSuite, HandshakeType, SignatureScheme};
 
-        let rng = crypto::rand::SystemRandom::new();
         let mut random = [0; 32];
-        rng.fill(&mut random).unwrap();
+        crypto::rand::fill_random(&mut random).unwrap();
         let random = Random::from(random);
 
+        let rng = crypto::rand::SystemRandom::new();
         let kx = crypto::agreement::EphemeralPrivateKey::generate(&crypto::agreement::X25519, &rng)
             .unwrap()
             .compute_public_key()
