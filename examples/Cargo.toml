@@ -27,4 +27,4 @@ webpki-roots = "0.22"
 
 [dev-dependencies]
 regex = "1.0"
-ring = "0.16.20"
+rand = "0.8"

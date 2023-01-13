@@ -12,8 +12,6 @@ use std::time;
 use self::regex::Regex;
 use regex;
 
-use ring::rand::SecureRandom;
-
 pub struct DeleteFilesOnDrop {
     path: PathBuf,
 }
@@ -51,10 +49,9 @@ macro_rules! embed_files {
         }
 
         pub fn new_test_ca() -> DeleteFilesOnDrop {
+            use rand::RngCore;
             let mut rand = [0u8; 4];
-            ring::rand::SystemRandom::new()
-                .fill(&mut rand)
-                .unwrap();
+            rand::rngs::OsRng.fill_bytes(&mut rand);
 
             let dir = env::temp_dir()
                 .join(format!("rustls-{:02x}{:02x}{:02x}{:02x}",
