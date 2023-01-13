@@ -11,7 +11,7 @@ use crate::suites::BulkAlgorithm;
 use crate::tls13::key_schedule::hkdf_expand;
 use crate::tls13::{Tls13CipherSuite, TLS13_AES_128_GCM_SHA256_INTERNAL};
 
-use ring::{aead, hkdf};
+use crate::crypto::{aead, hkdf};
 
 use std::collections::VecDeque;
 use std::fmt::{self, Debug};
@@ -808,7 +808,7 @@ pub enum KeyChange {
 }
 
 /// Compute the nonce to use for encrypting or decrypting `packet_number`
-fn nonce_for(packet_number: u64, iv: &Iv) -> ring::aead::Nonce {
+fn nonce_for(packet_number: u64, iv: &Iv) -> aead::Nonce {
     let mut out = [0; aead::NONCE_LEN];
     out[4..].copy_from_slice(&packet_number.to_be_bytes());
     for (out, inp) in out.iter_mut().zip(iv.0.iter()) {

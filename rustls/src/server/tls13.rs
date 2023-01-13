@@ -35,7 +35,7 @@ use super::server_conn::ServerConnectionData;
 
 use std::sync::Arc;
 
-use ring::constant_time;
+use crate::crypto::constant_time;
 
 pub(super) use client_hello::CompleteClientHelloHandling;
 

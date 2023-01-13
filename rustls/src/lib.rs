@@ -319,6 +319,7 @@ mod anchors;
 mod cipher;
 mod common_state;
 mod conn;
+mod crypto;
 mod error;
 mod hash_hs;
 mod limited_cache;

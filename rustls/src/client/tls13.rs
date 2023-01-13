@@ -41,8 +41,8 @@ use crate::client::common::ServerCertDetails;
 use crate::client::common::{ClientAuthDetails, ClientHelloDetails};
 use crate::client::{hs, ClientConfig, ClientSessionStore, ServerName};
 
+use crate::crypto::{self, constant_time};
 use crate::ticketer::TimeBase;
-use ring::constant_time;
 
 use crate::sign::{CertifiedKey, Signer};
 use std::sync::Arc;
@@ -765,7 +765,7 @@ fn emit_certverify_tls13(
 
 fn emit_finished_tls13(
     transcript: &mut HandshakeHash,
-    verify_data: ring::hmac::Tag,
+    verify_data: crypto::hmac::Tag,
     common: &mut CommonState,
 ) {
     let verify_data_payload = Payload::new(verify_data.as_ref());

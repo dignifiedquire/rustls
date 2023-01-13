@@ -10,8 +10,9 @@ use crate::suites::{BulkAlgorithm, CipherSuiteCommon, SupportedCipherSuite};
 #[cfg(feature = "secret_extraction")]
 use crate::suites::{ConnectionTrafficSecrets, PartiallyExtractedSecrets};
 
-use ring::aead;
-use ring::digest::Digest;
+use crate::crypto;
+use crate::crypto::aead;
+use crate::crypto::digest::Digest;
 
 use std::fmt;
 
@@ -26,14 +27,14 @@ pub static TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256: SupportedCipherSuite =
         common: CipherSuiteCommon {
             suite: CipherSuite::TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
             bulk: BulkAlgorithm::Chacha20Poly1305,
-            aead_algorithm: &ring::aead::CHACHA20_POLY1305,
+            aead_algorithm: &crypto::aead::CHACHA20_POLY1305,
         },
         kx: KeyExchangeAlgorithm::ECDHE,
         sign: TLS12_ECDSA_SCHEMES,
         fixed_iv_len: 12,
         explicit_nonce_len: 0,
         aead_alg: &ChaCha20Poly1305,
-        hmac_algorithm: ring::hmac::HMAC_SHA256,
+        hmac_algorithm: crypto::hmac::HMAC_SHA256,
     });
 
 /// The TLS1.2 ciphersuite TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
@@ -42,14 +43,14 @@ pub static TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256: SupportedCipherSuite =
         common: CipherSuiteCommon {
             suite: CipherSuite::TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
             bulk: BulkAlgorithm::Chacha20Poly1305,
-            aead_algorithm: &ring::aead::CHACHA20_POLY1305,
+            aead_algorithm: &crypto::aead::CHACHA20_POLY1305,
         },
         kx: KeyExchangeAlgorithm::ECDHE,
         sign: TLS12_RSA_SCHEMES,
         fixed_iv_len: 12,
         explicit_nonce_len: 0,
         aead_alg: &ChaCha20Poly1305,
-        hmac_algorithm: ring::hmac::HMAC_SHA256,
+        hmac_algorithm: crypto::hmac::HMAC_SHA256,
     });
 
 /// The TLS1.2 ciphersuite TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
@@ -58,14 +59,14 @@ pub static TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256: SupportedCipherSuite =
         common: CipherSuiteCommon {
             suite: CipherSuite::TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
             bulk: BulkAlgorithm::Aes128Gcm,
-            aead_algorithm: &ring::aead::AES_128_GCM,
+            aead_algorithm: &crypto::aead::AES_128_GCM,
         },
         kx: KeyExchangeAlgorithm::ECDHE,
         sign: TLS12_RSA_SCHEMES,
         fixed_iv_len: 4,
         explicit_nonce_len: 8,
         aead_alg: &AesGcm,
-        hmac_algorithm: ring::hmac::HMAC_SHA256,
+        hmac_algorithm: crypto::hmac::HMAC_SHA256,
     });
 
 /// The TLS1.2 ciphersuite TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
@@ -74,14 +75,14 @@ pub static TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384: SupportedCipherSuite =
         common: CipherSuiteCommon {
             suite: CipherSuite::TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
             bulk: BulkAlgorithm::Aes256Gcm,
-            aead_algorithm: &ring::aead::AES_256_GCM,
+            aead_algorithm: &crypto::aead::AES_256_GCM,
         },
         kx: KeyExchangeAlgorithm::ECDHE,
         sign: TLS12_RSA_SCHEMES,
         fixed_iv_len: 4,
         explicit_nonce_len: 8,
         aead_alg: &AesGcm,
-        hmac_algorithm: ring::hmac::HMAC_SHA384,
+        hmac_algorithm: crypto::hmac::HMAC_SHA384,
     });
 
 /// The TLS1.2 ciphersuite TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
@@ -90,14 +91,14 @@ pub static TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256: SupportedCipherSuite =
         common: CipherSuiteCommon {
             suite: CipherSuite::TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
             bulk: BulkAlgorithm::Aes128Gcm,
-            aead_algorithm: &ring::aead::AES_128_GCM,
+            aead_algorithm: &crypto::aead::AES_128_GCM,
         },
         kx: KeyExchangeAlgorithm::ECDHE,
         sign: TLS12_ECDSA_SCHEMES,
         fixed_iv_len: 4,
         explicit_nonce_len: 8,
         aead_alg: &AesGcm,
-        hmac_algorithm: ring::hmac::HMAC_SHA256,
+        hmac_algorithm: crypto::hmac::HMAC_SHA256,
     });
 
 /// The TLS1.2 ciphersuite TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
@@ -106,14 +107,14 @@ pub static TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384: SupportedCipherSuite =
         common: CipherSuiteCommon {
             suite: CipherSuite::TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
             bulk: BulkAlgorithm::Aes256Gcm,
-            aead_algorithm: &ring::aead::AES_256_GCM,
+            aead_algorithm: &crypto::aead::AES_256_GCM,
         },
         kx: KeyExchangeAlgorithm::ECDHE,
         sign: TLS12_ECDSA_SCHEMES,
         fixed_iv_len: 4,
         explicit_nonce_len: 8,
         aead_alg: &AesGcm,
-        hmac_algorithm: ring::hmac::HMAC_SHA384,
+        hmac_algorithm: crypto::hmac::HMAC_SHA384,
     });
 
 static TLS12_ECDSA_SCHEMES: &[SignatureScheme] = &[
@@ -136,7 +137,7 @@ static TLS12_RSA_SCHEMES: &[SignatureScheme] = &[
 pub struct Tls12CipherSuite {
     /// Common cipher suite fields.
     pub common: CipherSuiteCommon,
-    pub(crate) hmac_algorithm: ring::hmac::Algorithm,
+    pub(crate) hmac_algorithm: crypto::hmac::Algorithm,
     /// How to exchange/agree keys.
     pub kx: KeyExchangeAlgorithm,
 
@@ -171,7 +172,7 @@ impl Tls12CipherSuite {
     }
 
     /// Which hash function to use with this suite.
-    pub fn hash_algorithm(&self) -> &'static ring::digest::Algorithm {
+    pub fn hash_algorithm(&self) -> &'static crypto::digest::Algorithm {
         self.hmac_algorithm.digest_algorithm()
     }
 }
@@ -414,7 +415,7 @@ impl ConnectionSecrets {
             iv: server_iv,
         };
 
-        let (client_secrets, server_secrets) = if algo == &ring::aead::AES_128_GCM {
+        let (client_secrets, server_secrets) = if algo == &crypto::aead::AES_128_GCM {
             let extract = |pair: Pair| -> ConnectionTrafficSecrets {
                 let mut key = [0u8; 16];
                 key.copy_from_slice(pair.key);
@@ -429,7 +430,7 @@ impl ConnectionSecrets {
             };
 
             (extract(client_pair), extract(server_pair))
-        } else if algo == &ring::aead::AES_256_GCM {
+        } else if algo == &crypto::aead::AES_256_GCM {
             let extract = |pair: Pair| -> ConnectionTrafficSecrets {
                 let mut key = [0u8; 32];
                 key.copy_from_slice(pair.key);
@@ -444,7 +445,7 @@ impl ConnectionSecrets {
             };
 
             (extract(client_pair), extract(server_pair))
-        } else if algo == &ring::aead::CHACHA20_POLY1305 {
+        } else if algo == &crypto::aead::CHACHA20_POLY1305 {
             let extract = |pair: Pair| -> ConnectionTrafficSecrets {
                 let mut key = [0u8; 32];
                 key.copy_from_slice(pair.key);

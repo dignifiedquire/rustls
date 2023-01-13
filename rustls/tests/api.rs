@@ -3349,7 +3349,8 @@ mod test_quic {
         )
         .unwrap();
 
-        use ring::rand::SecureRandom;
+        use crate::crypto;
+        use crate::crypto::rand::SecureRandom;
         use rustls::internal::msgs::base::PayloadU16;
         use rustls::internal::msgs::enums::{Compression, NamedGroup};
         use rustls::internal::msgs::handshake::{
@@ -3357,12 +3358,12 @@ mod test_quic {
         };
         use rustls::{CipherSuite, HandshakeType, SignatureScheme};
 
-        let rng = ring::rand::SystemRandom::new();
+        let rng = crypto::rand::SystemRandom::new();
         let mut random = [0; 32];
         rng.fill(&mut random).unwrap();
         let random = Random::from(random);
 
-        let kx = ring::agreement::EphemeralPrivateKey::generate(&ring::agreement::X25519, &rng)
+        let kx = crypto::agreement::EphemeralPrivateKey::generate(&crypto::agreement::X25519, &rng)
             .unwrap()
             .compute_public_key()
             .unwrap();
@@ -3404,7 +3405,8 @@ mod test_quic {
         server_config.alpn_protocols = vec!["foo".into()];
         let server_config = Arc::new(server_config);
 
-        use ring::rand::SecureRandom;
+        use crate::crypto;
+        use crate::crypto::rand::SecureRandom;
         use rustls::internal::msgs::base::PayloadU16;
         use rustls::internal::msgs::enums::{Compression, NamedGroup};
         use rustls::internal::msgs::handshake::{
@@ -3412,12 +3414,12 @@ mod test_quic {
         };
         use rustls::{CipherSuite, HandshakeType, SignatureScheme};
 
-        let rng = ring::rand::SystemRandom::new();
+        let rng = crypto::rand::SystemRandom::new();
         let mut random = [0; 32];
         rng.fill(&mut random).unwrap();
         let random = Random::from(random);
 
-        let kx = ring::agreement::EphemeralPrivateKey::generate(&ring::agreement::X25519, &rng)
+        let kx = crypto::agreement::EphemeralPrivateKey::generate(&crypto::agreement::X25519, &rng)
             .unwrap()
             .compute_public_key()
             .unwrap();

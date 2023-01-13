@@ -1,5 +1,6 @@
 use std::fmt;
 
+use crate::crypto::{agreement, rand};
 use crate::error::{Error, PeerMisbehaved};
 use crate::msgs::enums::NamedGroup;
 
@@ -7,8 +8,8 @@ use crate::msgs::enums::NamedGroup;
 /// our private key, and our public key.
 pub(crate) struct KeyExchange {
     skxg: &'static SupportedKxGroup,
-    privkey: ring::agreement::EphemeralPrivateKey,
-    pub(crate) pubkey: ring::agreement::PublicKey,
+    privkey: agreement::EphemeralPrivateKey,
+    pub(crate) pubkey: agreement::PublicKey,
 }
 
 impl KeyExchange {
@@ -27,9 +28,8 @@ impl KeyExchange {
     ///
     /// This generates an ephemeral key pair and stores it in the returned KeyExchange object.
     pub(crate) fn start(skxg: &'static SupportedKxGroup) -> Option<Self> {
-        let rng = ring::rand::SystemRandom::new();
-        let ours =
-            ring::agreement::EphemeralPrivateKey::generate(skxg.agreement_algorithm, &rng).ok()?;
+        let rng = rand::SystemRandom::new();
+        let ours = agreement::EphemeralPrivateKey::generate(skxg.agreement_algorithm, &rng).ok()?;
 
         let pubkey = ours.compute_public_key().ok()?;
 
@@ -54,8 +54,8 @@ impl KeyExchange {
         peer: &[u8],
         f: impl FnOnce(&[u8]) -> Result<T, ()>,
     ) -> Result<T, Error> {
-        let peer_key = ring::agreement::UnparsedPublicKey::new(self.skxg.agreement_algorithm, peer);
-        ring::agreement::agree_ephemeral(self.privkey, &peer_key, (), f)
+        let peer_key = agreement::UnparsedPublicKey::new(self.skxg.agreement_algorithm, peer);
+        agreement::agree_ephemeral(self.privkey, &peer_key, (), f)
             .map_err(|()| PeerMisbehaved::InvalidKeyShare.into())
     }
 }
@@ -69,7 +69,7 @@ pub struct SupportedKxGroup {
     pub name: NamedGroup,
 
     /// The corresponding ring agreement::Algorithm
-    agreement_algorithm: &'static ring::agreement::Algorithm,
+    agreement_algorithm: &'static agreement::Algorithm,
 }
 
 impl fmt::Debug for SupportedKxGroup {
@@ -81,19 +81,19 @@ impl fmt::Debug for SupportedKxGroup {
 /// Ephemeral ECDH on curve25519 (see RFC7748)
 pub static X25519: SupportedKxGroup = SupportedKxGroup {
     name: NamedGroup::X25519,
-    agreement_algorithm: &ring::agreement::X25519,
+    agreement_algorithm: &agreement::X25519,
 };
 
 /// Ephemeral ECDH on secp256r1 (aka NIST-P256)
 pub static SECP256R1: SupportedKxGroup = SupportedKxGroup {
     name: NamedGroup::secp256r1,
-    agreement_algorithm: &ring::agreement::ECDH_P256,
+    agreement_algorithm: &agreement::ECDH_P256,
 };
 
 /// Ephemeral ECDH on secp384r1 (aka NIST-P384)
 pub static SECP384R1: SupportedKxGroup = SupportedKxGroup {
     name: NamedGroup::secp384r1,
-    agreement_algorithm: &ring::agreement::ECDH_P384,
+    agreement_algorithm: &agreement::ECDH_P384,
 };
 
 /// A list of all the key exchange groups supported by rustls.

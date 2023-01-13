@@ -1,6 +1,6 @@
 //! The single place where we generate random material for our own use.
 
-use ring::rand::{SecureRandom, SystemRandom};
+use crate::crypto::rand::{SecureRandom, SystemRandom};
 
 /// Fill the whole slice with random material.
 pub(crate) fn fill_random(bytes: &mut [u8]) -> Result<(), GetRandomFailed> {

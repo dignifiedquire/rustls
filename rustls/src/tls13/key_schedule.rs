@@ -9,7 +9,7 @@ use crate::suites::{ConnectionTrafficSecrets, PartiallyExtractedSecrets};
 use crate::{KeyLog, Tls13CipherSuite};
 
 /// Key schedule maintenance for TLS1.3
-use ring::{
+use crate::crypto::{
     aead,
     digest::{self, Digest},
     hkdf::{self, KeyType as _},
@@ -532,7 +532,7 @@ impl KeyScheduleTraffic {
         let server_secrets;
 
         let algo = self.ks.suite.common.aead_algorithm;
-        if algo == &ring::aead::AES_128_GCM {
+        if algo == &crypto::aead::AES_128_GCM {
             let extract = |secret: &hkdf::Prk| -> Result<ConnectionTrafficSecrets, Error> {
                 let (key, iv_in) = expand::<16, 12>(secret)?;
 
@@ -547,7 +547,7 @@ impl KeyScheduleTraffic {
 
             client_secrets = extract(&self.current_client_traffic_secret)?;
             server_secrets = extract(&self.current_server_traffic_secret)?;
-        } else if algo == &ring::aead::AES_256_GCM {
+        } else if algo == &aead::AES_256_GCM {
             let extract = |secret: &hkdf::Prk| -> Result<ConnectionTrafficSecrets, Error> {
                 let (key, iv_in) = expand::<32, 12>(secret)?;
 
@@ -562,7 +562,7 @@ impl KeyScheduleTraffic {
 
             client_secrets = extract(&self.current_client_traffic_secret)?;
             server_secrets = extract(&self.current_server_traffic_secret)?;
-        } else if algo == &ring::aead::CHACHA20_POLY1305 {
+        } else if algo == &aead::CHACHA20_POLY1305 {
             let extract = |secret: &hkdf::Prk| -> Result<ConnectionTrafficSecrets, Error> {
                 let (key, iv) = expand::<32, 12>(secret)?;
                 Ok(ConnectionTrafficSecrets::Chacha20Poly1305 { key, iv })
@@ -829,9 +829,9 @@ pub(crate) fn derive_traffic_iv(secret: &hkdf::Prk) -> Iv {
 #[cfg(test)]
 mod test {
     use super::{derive_traffic_iv, derive_traffic_key, KeySchedule, SecretKind};
+    use crate::crypto::aead;
     use crate::tls13::TLS13_CHACHA20_POLY1305_SHA256_INTERNAL;
     use crate::KeyLog;
-    use ring::aead;
 
     #[test]
     fn test_vectors() {

@@ -1,5 +1,6 @@
 use std::fmt;
 
+use crate::crypto;
 use crate::enums::{CipherSuite, ProtocolVersion, SignatureAlgorithm, SignatureScheme};
 #[cfg(feature = "tls12")]
 use crate::tls12::Tls12CipherSuite;
@@ -44,7 +45,7 @@ pub struct CipherSuiteCommon {
     /// How to do bulk encryption.
     pub bulk: BulkAlgorithm,
 
-    pub(crate) aead_algorithm: &'static ring::aead::Algorithm,
+    pub(crate) aead_algorithm: &'static crypto::aead::Algorithm,
 }
 
 /// A cipher suite supported by rustls.
@@ -68,7 +69,7 @@ impl fmt::Debug for SupportedCipherSuite {
 
 impl SupportedCipherSuite {
     /// Which hash function to use with this suite.
-    pub fn hash_algorithm(&self) -> &'static ring::digest::Algorithm {
+    pub fn hash_algorithm(&self) -> &'static crypto::digest::Algorithm {
         match self {
             #[cfg(feature = "tls12")]
             Self::Tls12(inner) => inner.hash_algorithm(),

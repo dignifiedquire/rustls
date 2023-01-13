@@ -31,8 +31,8 @@ use crate::client::common::ClientAuthDetails;
 use crate::client::common::ServerCertDetails;
 use crate::client::{hs, ClientConfig, ServerName};
 
-use ring::agreement::PublicKey;
-use ring::constant_time;
+use crate::crypto::agreement::PublicKey;
+use crate::crypto::constant_time;
 
 use std::sync::Arc;
 

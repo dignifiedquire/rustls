@@ -2,6 +2,7 @@ use std::fmt;
 
 use crate::anchors::{OwnedTrustAnchor, RootCertStore};
 use crate::client::ServerName;
+use crate::crypto::digest::Digest;
 use crate::enums::SignatureScheme;
 use crate::error::{CertificateError, Error, InvalidMessage, PeerMisbehaved};
 use crate::key::Certificate;
@@ -10,8 +11,6 @@ use crate::log::{debug, trace, warn};
 use crate::msgs::base::PayloadU16;
 use crate::msgs::codec::{Codec, Reader};
 use crate::msgs::handshake::DistinguishedNames;
-
-use ring::digest::Digest;
 
 use std::sync::Arc;
 use std::time::SystemTime;

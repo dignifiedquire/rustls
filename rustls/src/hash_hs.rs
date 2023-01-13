@@ -1,7 +1,7 @@
+use crate::crypto::digest;
 use crate::msgs::codec::Codec;
 use crate::msgs::handshake::HandshakeMessagePayload;
 use crate::msgs::message::{Message, MessagePayload};
-use ring::digest;
 use std::mem;
 
 /// Early stage buffering of handshake payloads.
@@ -164,7 +164,7 @@ impl HandshakeHash {
 #[cfg(test)]
 mod test {
     use super::HandshakeHashBuffer;
-    use ring::digest;
+    use crate::crypto::digest;
 
     #[test]
     fn hashes_correctly() {
