@@ -48,6 +48,10 @@ mod crypto_ring {
     }
 
     pub(crate) mod signature {
-        pub(crate) use ring::signature::*;
+        pub(crate) use ring::signature::{
+            EcdsaKeyPair, EcdsaSigningAlgorithm, Ed25519KeyPair, RsaEncoding, RsaKeyPair,
+            ECDSA_P256_SHA256_ASN1_SIGNING, ECDSA_P384_SHA384_ASN1_SIGNING, RSA_PKCS1_SHA256,
+            RSA_PKCS1_SHA384, RSA_PKCS1_SHA512, RSA_PSS_SHA256, RSA_PSS_SHA384, RSA_PSS_SHA512,
+        };
     }
 }
