@@ -2,6 +2,7 @@ use crate::cipher::{Iv, IvLen, MessageDecrypter};
 use crate::conn::{CommonState, Side};
 use crate::error::Error;
 use crate::msgs::base::PayloadU8;
+use crate::msgs::message::Message;
 #[cfg(feature = "quic")]
 use crate::quic;
 #[cfg(feature = "secret_extraction")]
@@ -463,6 +464,7 @@ impl KeyScheduleTraffic {
 
     pub(crate) fn update_encrypter(&mut self, common: &mut CommonState) {
         let secret = self.next_application_traffic_secret(common.side);
+        common.send_msg_encrypt(Message::build_key_update_notify().into());
         self.ks.set_encrypter(&secret, common);
     }
 
