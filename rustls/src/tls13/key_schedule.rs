@@ -532,7 +532,7 @@ impl KeyScheduleTraffic {
         let server_secrets;
 
         let algo = self.ks.suite.common.aead_algorithm;
-        if algo == &crypto::aead::AES_128_GCM {
+        if algo == &aead::AES_128_GCM {
             let extract = |secret: &hkdf::Prk| -> Result<ConnectionTrafficSecrets, Error> {
                 let (key, iv_in) = expand::<16, 12>(secret)?;
 
